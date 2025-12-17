@@ -88,8 +88,20 @@
     <header class="text-center py-10 px-4">
 
         <p class="text-xl sm:text-2xl tracking-widest text-[var(--brand-teal)] mt-4 font-semibold">VERANO ESTATE</p>
-        <h1 class="text-3xl sm:text-4xl mt-2">Formulario de Información de Huéspedes</h1>
+        <h1 id="mainTitle" class="text-3xl sm:text-4xl mt-2">Formulario de Información de Huéspedes</h1>
         <p class="text-sm text-gray-500 mt-2">by Chef Franko</p>
+        
+        <!-- Botón de traducción -->
+        <div class="mt-6">
+            <button id="translateBtn" onclick="toggleLanguage()" type="button"
+                class="btn btn-primary font-semibold py-3 px-6 rounded-lg shadow-md flex items-center justify-center mx-auto hover:scale-105 transition-transform">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path>
+                </svg>
+                <span id="translateBtnText">Translate to English</span>
+            </button>
+        </div>
     </header>
 
     <!-- WiFi Info Section -->
@@ -446,6 +458,409 @@
     </footer>
 
     <script>
+        // --- TRANSLATION SYSTEM ---
+        let currentLang = 'es'; // Default language is Spanish
+
+        const translations = {
+            es: {
+                mainTitle: 'Formulario de Información de Huéspedes',
+                translateBtn: 'Translate to English',
+                section1: 'Información Básica',
+                section2: 'Transporte del Aeropuerto a la Villa',
+                section3: 'Información de Estadía y Habitaciones',
+                section4: 'Servicios Adicionales',
+                section5: 'Servicios y Actividades Especiales',
+                section6: 'Provisiones y Bebidas',
+                groupName: 'Nombre del Grupo',
+                contactLeader: 'Contacto/Líder',
+                phone: 'Teléfono',
+                vipRoundtrip: 'VIP SUV Transfer del Aeropuerto: Viaje redondo',
+                vipArrival: 'Solo llegada',
+                vipDeparture: 'Solo salida',
+                taxiOwn: 'Taxi por su cuenta',
+                other: 'Otro',
+                mainArrivalDate: 'Fecha Principal de Llegada del Grupo',
+                mainDepartureDate: 'Fecha Principal de Salida del Grupo',
+                roomsReserved: 'Número de habitaciones reservadas',
+                totalAdults: 'Total de Adultos',
+                childrenAges: 'Niños (edades)',
+                childrenPlaceholder: 'ej: 2 niños (8, 12 años)',
+                preassignQuestion: '¿Prefiere pre-asignar habitaciones y registrar llegadas/salidas individuales?',
+                yes: 'SÍ',
+                no: 'NO',
+                individualRegistry: 'Registro Individual de Huéspedes',
+                room: 'Hab.#',
+                guest: 'Huésped',
+                arrival: 'Llegada',
+                departure: 'Salida',
+                guestName: 'Nombre del Huésped',
+                flight: 'Vuelo',
+                sundayMealQuestion: '¿Le gustaría Servicio de Comida los Domingos?',
+                sundayCleaningQuestion: '¿Le gustaría Servicio de Limpieza los Domingos?',
+                additionalCosts: '(costos adicionales aplican)',
+                specialRequests: '¿Alguna solicitud especial al llegar?',
+                specialOccasion: '¿Alguien celebrando una ocasión especial?',
+                occasionPlaceholder: 'ej: Cumpleaños, Aniversario',
+                occasionDate: 'Fecha del evento',
+                activitiesIntro: '¿Le gustaría información o pre-reservar alguno de estos servicios y actividades especiales?',
+                flowers: 'Flores',
+                mariachi: 'Banda de Mariachi-trío',
+                atv: 'Tour en ATV',
+                cityTour: 'Tour privado de la ciudad',
+                zipline: 'Tours de Tirolesa',
+                yoga: 'Clase de Yoga',
+                salsa: 'Lección de Salsa',
+                yacht: 'Tour privado en Yate',
+                spa: 'Servicios de SPA',
+                provisionsIntro: 'Por favor indique la cantidad y su marca preferida. El costo de los artículos más un cargo por servicio se agregará a su factura.',
+                additionalInfo: 'Información adicional o restricciones dietéticas que debamos saber:',
+                submitBtn: 'Enviar Formulario',
+                whatsappBtn: 'Enviar por WhatsApp',
+                clearBtn: 'Limpiar Formulario',
+                oneBedKing: 'Una Cama King',
+                twoBedQueen: '2 Camas Queen',
+                alcoholicBeverages: 'Bebidas Alcohólicas',
+                nonAlcoholicBeverages: 'Bebidas No Alcohólicas',
+                foodSnacks: 'Comida y Snacks',
+                personalCareItems: 'Artículos de Aseo Personal',
+                beer: 'Cerveza',
+                tequila: 'Tequila',
+                vodka: 'Vodka',
+                whiskey: 'Whiskey',
+                rum: 'Ron',
+                redWine: 'Vino Tinto (Cabernet)',
+                whiteWine: 'Vino Blanco (Chardonnay)',
+                roseWine: 'Vino Rosado',
+                bottledWater: 'Agua Embotellada',
+                sodas: 'Refrescos',
+                juice: 'Jugo',
+                cereals: 'Cereales',
+                bread: 'Pan',
+                vegetables: 'Vegetales',
+                fruits: 'Frutas',
+                coffee: 'Café',
+                milk: 'Leche',
+                snacks: 'Botanas (papas, nueces)',
+                toothbrushes: 'Cepillos de dientes',
+                toothpaste: 'Pasta de dientes',
+                sunscreen: 'Bloqueador Solar',
+                insectRepellent: 'Repelente de insectos',
+                includedStay: 'Incluidos en su estancia',
+                includedStay2: 'Incluida en su estancia',
+                quantity: 'Cantidad',
+                preferredBrand: 'Marca preferida',
+                preferredBrands: 'Marca(s) preferida(s)',
+                preferredFlavors: 'Sabor(es) preferido(s)',
+                preferredType: 'Tipo preferido',
+                preferredTypes: 'Tipos preferidos'
+            },
+            en: {
+                mainTitle: 'Guest Information Form',
+                translateBtn: 'Traducir al Español',
+                section1: 'Basic Information',
+                section2: 'Airport to Villa Transportation',
+                section3: 'Stay and Room Information',
+                section4: 'Additional Services',
+                section5: 'Special Services and Activities',
+                section6: 'Provisions and Beverages',
+                groupName: 'Group Name',
+                contactLeader: 'Contact/Leader',
+                phone: 'Phone',
+                vipRoundtrip: 'VIP SUV Airport Transfer: Round trip',
+                vipArrival: 'Arrival only',
+                vipDeparture: 'Departure only',
+                taxiOwn: 'Taxi on your own',
+                other: 'Other',
+                mainArrivalDate: 'Main Group Arrival Date',
+                mainDepartureDate: 'Main Group Departure Date',
+                roomsReserved: 'Number of rooms reserved',
+                totalAdults: 'Total Adults',
+                childrenAges: 'Children (ages)',
+                childrenPlaceholder: 'e.g.: 2 children (8, 12 years)',
+                preassignQuestion: 'Would you prefer to pre-assign rooms and register individual arrivals/departures?',
+                yes: 'YES',
+                no: 'NO',
+                individualRegistry: 'Individual Guest Registry',
+                room: 'Room#',
+                guest: 'Guest',
+                arrival: 'Arrival',
+                departure: 'Departure',
+                guestName: 'Guest Name',
+                flight: 'Flight',
+                sundayMealQuestion: 'Would you like Sunday Meal Service?',
+                sundayCleaningQuestion: 'Would you like Sunday Cleaning Service?',
+                additionalCosts: '(additional costs apply)',
+                specialRequests: 'Any special requests upon arrival?',
+                specialOccasion: 'Anyone celebrating a special occasion?',
+                occasionPlaceholder: 'e.g.: Birthday, Anniversary',
+                occasionDate: 'Event date',
+                activitiesIntro: 'Would you like information or pre-book any of these special services and activities?',
+                flowers: 'Flowers',
+                mariachi: 'Mariachi-trio Band',
+                atv: 'ATV Tour',
+                cityTour: 'Private City Tour',
+                zipline: 'Zipline Tours',
+                yoga: 'Yoga Class',
+                salsa: 'Salsa Lesson',
+                yacht: 'Private Yacht Tour',
+                spa: 'SPA Services',
+                provisionsIntro: 'Please indicate quantity and your preferred brand. Item cost plus a service charge will be added to your bill.',
+                additionalInfo: 'Additional information or dietary restrictions we should know:',
+                submitBtn: 'Submit Form',
+                whatsappBtn: 'Send via WhatsApp',
+                clearBtn: 'Clear Form',
+                oneBedKing: 'One King Bed',
+                twoBedQueen: '2 Queen Beds',
+                alcoholicBeverages: 'Alcoholic Beverages',
+                nonAlcoholicBeverages: 'Non-Alcoholic Beverages',
+                foodSnacks: 'Food and Snacks',
+                personalCareItems: 'Personal Care Items',
+                beer: 'Beer',
+                tequila: 'Tequila',
+                vodka: 'Vodka',
+                whiskey: 'Whiskey',
+                rum: 'Rum',
+                redWine: 'Red Wine (Cabernet)',
+                whiteWine: 'White Wine (Chardonnay)',
+                roseWine: 'Rosé Wine',
+                bottledWater: 'Bottled Water',
+                sodas: 'Sodas',
+                juice: 'Juice',
+                cereals: 'Cereals',
+                bread: 'Bread',
+                vegetables: 'Vegetables',
+                fruits: 'Fruits',
+                coffee: 'Coffee',
+                milk: 'Milk',
+                snacks: 'Snacks (chips, nuts)',
+                toothbrushes: 'Toothbrushes',
+                toothpaste: 'Toothpaste',
+                sunscreen: 'Sunscreen',
+                insectRepellent: 'Insect Repellent',
+                includedStay: 'Included in your stay',
+                includedStay2: 'Included in your stay',
+                quantity: 'Quantity',
+                preferredBrand: 'Preferred brand',
+                preferredBrands: 'Preferred brand(s)',
+                preferredFlavors: 'Preferred flavor(s)',
+                preferredType: 'Preferred type',
+                preferredTypes: 'Preferred types'
+            }
+        };
+
+        function toggleLanguage() {
+            currentLang = currentLang === 'es' ? 'en' : 'es';
+            updateTexts();
+        }
+
+        function updateTexts() {
+            const t = translations[currentLang];
+            
+            // Update page title
+            document.getElementById('mainTitle').textContent = t.mainTitle;
+            document.getElementById('translateBtnText').textContent = t.translateBtn;
+            document.documentElement.lang = currentLang;
+            
+            // Update section headers
+            document.querySelectorAll('h2')[0].childNodes[2].textContent = ' ' + t.section1;
+            document.querySelectorAll('h2')[1].childNodes[2].textContent = ' ' + t.section2;
+            document.querySelectorAll('h2')[2].childNodes[2].textContent = ' ' + t.section3;
+            document.querySelectorAll('h2')[3].childNodes[2].textContent = ' ' + t.section4;
+            document.querySelectorAll('h2')[4].childNodes[2].textContent = ' ' + t.section5;
+            document.querySelectorAll('h2')[5].childNodes[2].textContent = ' ' + t.section6;
+            
+            // Section 1 - Basic Information
+            document.querySelector('label[for="group_name"]').textContent = t.groupName;
+            document.querySelector('label[for="contact_leader"]').textContent = t.contactLeader;
+            document.querySelector('label[for="phone"]').textContent = t.phone;
+            
+            // Section 2 - Transportation
+            const transportLabels = document.querySelectorAll('input[name="transportation"] + span');
+            transportLabels[0].textContent = t.vipRoundtrip;
+            transportLabels[1].textContent = t.vipArrival;
+            transportLabels[2].textContent = t.vipDeparture;
+            transportLabels[3].textContent = t.taxiOwn;
+            transportLabels[4].textContent = t.other;
+            
+            // Section 3 - Room Information
+            document.querySelector('label[for="main_arrival_date"]').textContent = t.mainArrivalDate;
+            document.querySelector('label[for="main_departure_date"]').textContent = t.mainDepartureDate;
+            document.querySelector('label[for="rooms_reserved"]').textContent = t.roomsReserved;
+            document.querySelector('label[for="total_adults"]').textContent = t.totalAdults;
+            document.querySelector('label[for="children_ages"]').textContent = t.childrenAges;
+            document.querySelector('#children_ages').placeholder = t.childrenPlaceholder;
+            
+            const preassignP = document.querySelector('p.text-sm.font-medium.text-gray-700.mb-3');
+            if (preassignP) preassignP.textContent = t.preassignQuestion;
+            
+            const preassignLabels = document.querySelectorAll('input[name="preassign_rooms"] + span');
+            preassignLabels[0].textContent = t.yes;
+            preassignLabels[1].textContent = t.no;
+            
+            // Room assignment table
+            const roomH3 = document.querySelector('#roomAssignment h3');
+            if (roomH3) roomH3.textContent = t.individualRegistry;
+            
+            const tableHeaders = document.querySelectorAll('#roomAssignmentTable th');
+            if (tableHeaders.length > 0) {
+                tableHeaders[0].textContent = t.room;
+                tableHeaders[1].textContent = t.guest;
+                tableHeaders[2].textContent = t.arrival;
+                tableHeaders[3].textContent = t.departure;
+            }
+            
+            // Update room table placeholders
+            document.querySelectorAll('input[name^="room_"][name$="_guest"]').forEach(input => {
+                input.placeholder = t.guestName;
+            });
+            document.querySelectorAll('input[name^="room_"][name$="_flight"]').forEach(input => {
+                input.placeholder = t.flight;
+            });
+            
+            // Section 4 - Additional Services
+            const sundayMealP = document.querySelectorAll('.grid.md\\:grid-cols-2.gap-6 p.text-sm')[0];
+            if (sundayMealP) sundayMealP.textContent = t.sundayMealQuestion;
+            
+            const sundayCleaningP = document.querySelectorAll('.grid.md\\:grid-cols-2.gap-6 p.text-sm')[1];
+            if (sundayCleaningP) sundayCleaningP.textContent = t.sundayCleaningQuestion;
+            
+            const sundayLabels = document.querySelectorAll('input[name="sunday_meal_service"] + span, input[name="sunday_maid_service"] + span');
+            sundayLabels.forEach((label, idx) => {
+                if (idx % 2 === 0) label.textContent = t.yes + ' ' + t.additionalCosts;
+                else label.textContent = t.no;
+            });
+            
+            document.querySelector('label[for="special_requests"]').textContent = t.specialRequests;
+            document.querySelector('label[for="special_occasion"]').textContent = t.specialOccasion;
+            document.querySelector('#special_occasion').placeholder = t.occasionPlaceholder;
+            document.querySelector('label[for="occasion_date"]').textContent = t.occasionDate;
+            
+            // Section 5 - Activities
+            const activitiesIntroP = document.querySelectorAll('section')[4].querySelector('p.text-sm');
+            if (activitiesIntroP) activitiesIntroP.textContent = t.activitiesIntro;
+            
+            const activityLabels = document.querySelectorAll('input[name="activities"] + span');
+            const activityKeys = ['flowers', 'mariachi', 'atv', 'cityTour', 'zipline', 'yoga', 'salsa', 'yacht', 'spa'];
+            activityLabels.forEach((label, idx) => {
+                if (activityKeys[idx]) label.textContent = t[activityKeys[idx]];
+            });
+            
+            // Section 6 - Provisions
+            const provisionsIntroP = document.querySelectorAll('section')[5].querySelector('p.text-sm');
+            if (provisionsIntroP) provisionsIntroP.textContent = t.provisionsIntro;
+            
+            document.querySelector('label[for="additional_info"]').textContent = t.additionalInfo;
+            
+            // Update provision categories and items
+            updateProvisionTexts(t);
+            
+            // Submit buttons
+            const submitSpan = document.querySelector('button[type="submit"] span');
+            if (submitSpan) submitSpan.textContent = t.submitBtn;
+            
+            const whatsappSpan = document.querySelector('button[onclick="sendToWhatsApp()"] span');
+            if (whatsappSpan) whatsappSpan.textContent = t.whatsappBtn;
+            
+            const clearSpan = document.querySelector('button[type="reset"] span');
+            if (clearSpan) clearSpan.textContent = t.clearBtn;
+            
+            // Update room types in table
+            updateRoomTypes(t);
+        }
+
+        function updateProvisionTexts(t) {
+            const categoryMap = {
+                'Bebidas Alcohólicas': 'alcoholicBeverages',
+                'Alcoholic Beverages': 'alcoholicBeverages',
+                'Bebidas No Alcohólicas': 'nonAlcoholicBeverages',
+                'Non-Alcoholic Beverages': 'nonAlcoholicBeverages',
+                'Comida y Snacks': 'foodSnacks',
+                'Food and Snacks': 'foodSnacks',
+                'Artículos de Aseo Personal': 'personalCareItems',
+                'Personal Care Items': 'personalCareItems'
+            };
+            
+            const categories = document.querySelectorAll('#provisionListContainer > div > h3');
+            categories.forEach((cat, idx) => {
+                const key = categoryMap[cat.textContent];
+                if (key) cat.textContent = t[key];
+            });
+            
+            // Update provision item labels
+            const itemMap = {
+                'cerveza': 'beer', 'beer': 'beer',
+                'tequila': 'tequila',
+                'vodka': 'vodka',
+                'whiskey': 'whiskey',
+                'ron': 'rum', 'rum': 'rum',
+                'vino_tinto_cabernet': 'redWine',
+                'vino_blanco_chardonnay': 'whiteWine',
+                'vino_rosado': 'roseWine',
+                'agua_embotellada': 'bottledWater',
+                'refrescos': 'sodas', 'sodas': 'sodas',
+                'jugo': 'juice', 'juice': 'juice',
+                'cereales': 'cereals', 'cereals': 'cereals',
+                'pan': 'bread', 'bread': 'bread',
+                'vegetales': 'vegetables', 'vegetables': 'vegetables',
+                'frutas': 'fruits', 'fruits': 'fruits',
+                'café': 'coffee', 'coffee': 'coffee',
+                'leche': 'milk', 'milk': 'milk',
+                'botanas_papas_nueces': 'snacks',
+                'cepillos_de_dientes': 'toothbrushes',
+                'pasta_de_dientes': 'toothpaste',
+                'bloqueador_solar': 'sunscreen',
+                'repelente_de_insectos': 'insectRepellent'
+            };
+            
+            // Update all provision labels
+            document.querySelectorAll('#provisionListContainer label').forEach(label => {
+                const text = label.textContent.trim();
+                const parts = text.split(' - ');
+                
+                if (parts.length === 2) {
+                    const itemId = label.getAttribute('for')?.replace('_amount', '').replace('_brand', '');
+                    const key = itemMap[itemId];
+                    
+                    if (key && parts[1] === 'Cantidad') {
+                        label.textContent = t[key] + ' - ' + t.quantity;
+                    } else if (key && (parts[1].includes('Marca') || parts[1].includes('brand') || parts[1].includes('Tipo') || parts[1].includes('type') || parts[1].includes('Sabor') || parts[1].includes('flavor'))) {
+                        let brandLabel = t.preferredBrand;
+                        if (parts[1].includes('(s)') || parts[1].includes('s)')) brandLabel = t.preferredBrands;
+                        if (parts[1].includes('Sabor') || parts[1].includes('flavor')) brandLabel = t.preferredFlavors;
+                        if (parts[1].includes('Tipo') || parts[1].includes('type')) {
+                            brandLabel = parts[1].includes('(s)') ? t.preferredTypes : t.preferredType;
+                        }
+                        label.textContent = t[key] + ' - ' + brandLabel;
+                    }
+                } else {
+                    // Info items
+                    Object.keys(itemMap).forEach(id => {
+                        const key = itemMap[id];
+                        if (text.includes(t.es?.[key] || '') || text.includes(t[key])) {
+                            const siblingP = label.nextElementSibling;
+                            if (siblingP && siblingP.tagName === 'P') {
+                                label.textContent = t[key];
+                                siblingP.textContent = key === 'toothpaste' ? t.includedStay2 : t.includedStay;
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        function updateRoomTypes(t) {
+            document.querySelectorAll('#roomAssignmentTable tbody tr').forEach(row => {
+                const typeP = row.querySelector('p.text-xs');
+                if (typeP) {
+                    if (typeP.textContent.includes('King') || typeP.textContent.includes('Cama King')) {
+                        typeP.textContent = t.oneBedKing;
+                    } else {
+                        typeP.textContent = t.twoBedQueen;
+                    }
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
 
             // --- DATA FOR DYNAMIC CONTENT ---
